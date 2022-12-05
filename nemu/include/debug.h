@@ -20,6 +20,14 @@
 #include <stdio.h>
 #include <utils.h>
 
+#define DEBUG 1
+#define debug_log(fmt, args...)                   \
+    do {                                          \
+        if (DEBUG) {                              \
+            printf("%s: " fmt, __func__, ##args); \
+        }                                         \
+    } while (0)
+
 #define Log(format, ...) \
     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
