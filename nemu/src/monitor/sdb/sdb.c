@@ -72,6 +72,18 @@ static int cmd_info(char *args)
     return 0;
 }
 
+static int cmd_si(char *args)
+{
+    char *arg = strtok(NULL, " ");
+
+    if (arg == NULL) {
+        Log("usage: si [N]");
+    } else {
+        cpu_exec(atoi(arg));
+    }
+    return 0;
+}
+
 static struct {
     const char *name;
     const char *description;
@@ -81,7 +93,10 @@ static struct {
     { "c", "Continue the execution of the program", cmd_c },
     { "q", "Exit NEMU", cmd_q },
     { "info", "info r-Display all register", cmd_info },
-
+    { "si",
+      "si [N]-Let the program execute N instructions in a single step and then suspend execution,\
+        When N is not given, it defaults to 1 ",
+      cmd_si },
     /* TODO: Add more commands */
 
 };
