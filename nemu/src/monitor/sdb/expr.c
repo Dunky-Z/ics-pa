@@ -23,6 +23,7 @@
 enum {
     TK_NOTYPE = 256,
     TK_EQ,
+    TK_HEX,
 
     /* TODO: Add more token types */
 
@@ -36,10 +37,15 @@ static struct rule {
     /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
+    /**
+   * 在此添加更多的token
+   * 注意不同规则的优先级。
+   */
 
-    { " +", TK_NOTYPE }, // spaces
-    { "\\+", '+' },      // plus
-    { "==", TK_EQ },     // equal
+    { " +", TK_NOTYPE },             // spaces
+    { "0[xX][0-9a-fA-F]+", TK_HEX }, // hex
+    { "\\+", '+' },                  // plus
+    { "==", TK_EQ },                 // equal
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -95,16 +101,26 @@ static bool make_token(char *e)
 
                 position += substr_len;
 
-                /* TODO: Now a new token is recognized with rules[i]. Add codes
-         * to record the token in the array `tokens'. For certain types
-         * of tokens, some extra actions should be performed.
-         */
+                /**
+                 * TODO: Now a new token is recognized with rules[i]. Add codes
+                 * to record the token in the array `tokens'. For certain types
+                 * of tokens, some extra actions should be performed.
+                 */
+                /**
+                 * TODO：现在一个新的 token 被 rules[i] 识别。 
+                 * 添加代码以将令牌记录在数组“令牌”中。 对于某些类型的令牌，应该执行一些额外的操作。
+                 */
 
                 switch (rules[i].token_type) {
+                case TK_HEX:
+                    sprintf(tokens[nr_token].str, "%.*s", substr_len,
+                            substr_start);
+                    debug_log("%s\n", substr_start);
+                    debug_log("%s\n", tokens[nr_token].str);
                 default:
-                    TODO();
+                    tokens[nr_token].type = rules[i].token_type;
+                    nr_token++;
                 }
-
                 break;
             }
         }
@@ -125,9 +141,8 @@ word_t expr(char *e, bool *success)
         *success = false;
         return 0;
     }
+    *success = true;
 
     /* TODO: Insert codes to evaluate the expression. */
-    TODO();
-
-    return 0;
+    return strtoul(tokens[0].str, NULL, 0);
 }

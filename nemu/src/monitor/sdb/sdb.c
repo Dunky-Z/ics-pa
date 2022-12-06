@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <memory/vaddr.h>
 #include "sdb.h"
 
 static int is_batch_mode = false;
@@ -84,6 +85,39 @@ static int cmd_si(char *args)
     return 0;
 }
 
+static int cmd_x(char *args)
+{
+    char *arg = strtok(NULL, " ");
+
+    if (arg == NULL) {
+        Log("usage: x n addr");
+    } else {
+        int     n;
+        vaddr_t addr;
+        int     i;
+        sscanf(arg, "%d", &n);
+
+        bool success;
+        addr = expr(arg + strlen(arg) + 1, &success);
+        if (success) {
+            for (i = 0; i < n; i++) {
+                if (i % 4 == 0) {
+                    printf("0x%08lx	", addr + i * 4);
+                }
+                printf("0x%08lx ", (vaddr_t)vaddr_read(addr, 4));
+                addr += 4;
+                if (i % 4 == 3) {
+                    printf("\n");
+                }
+            }
+            printf("\n");
+        } else {
+            Log("usage: x n addr");
+        }
+    }
+    return 0;
+}
+
 static struct {
     const char *name;
     const char *description;
@@ -97,6 +131,11 @@ static struct {
       "si [N]-Let the program execute N instructions in a single step and then suspend execution,\
         When N is not given, it defaults to 1 ",
       cmd_si },
+    { "x",
+      "x N EXPR-Find the value of the expression EXPR, using the result as the starting memory \
+        Address,output consecutive N 4 bytes in hexadecimal form ",
+      cmd_x },
+
     /* TODO: Add more commands */
 
 };
