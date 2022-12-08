@@ -17,9 +17,15 @@
 
 #include <memory/vaddr.h>
 
+/** 
+ * 首先根据len来调用vaddr_ifetch()
+ * vaddr_ifetch() 又会通过paddr_read() 来访问物理内存中的内容
+ * 取指操作的本质只不过就是一次内存的访问而已
+ */
 static inline uint32_t inst_fetch(vaddr_t *pc, int len)
 {
     uint32_t inst = vaddr_ifetch(*pc, len);
+    /* 根据len来更新s->snpc, 从而让s->snpc指向下一条指令 */
     (*pc) += len;
     return inst;
 }

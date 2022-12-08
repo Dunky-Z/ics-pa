@@ -27,6 +27,11 @@ typedef struct Decode {
 } Decode;
 
 // --- pattern matching mechanism ---
+/** 
+ * 用于将模式字符串转换成3个整型变量
+ * pattern_decode()函数将模式字符串中的0和1抽取到整型变量key中
+ * mask表示key的掩码, 而shift则表示opcode距离最低位的比特数量, 用于帮助编译器进行优化
+ */
 __attribute__((always_inline)) static inline void
 pattern_decode(const char *str, int len, uint64_t *key, uint64_t *mask,
                uint64_t *shift)
@@ -105,6 +110,14 @@ finish:
 }
 
 // --- pattern matching wrappers for decode ---
+/** 
+ * INSTPAT(模式字符串, 指令名称, 指令类型, 指令执行操作);
+ * 模式字符串中只允许出现4种字符:
+ *   0表示相应的位只能匹配0
+ *   1表示相应的位只能匹配1
+ *   ?表示相应的位可以匹配0或1
+ *   空格是分隔符, 只用于提升模式字符串的可读性, 不参与匹配
+ */
 #define INSTPAT(pattern, ...)                                          \
     do {                                                               \
         uint64_t key, mask, shift;                                     \

@@ -29,6 +29,9 @@ enum {
     TYPE_N, // none
 };
 
+/** 
+ * 辅助宏, 用于寄存器的读取结果记录到相应的操作数变量中
+ */
 #define src1R()         \
     do {                \
         *src1 = R(rs1); \
@@ -37,6 +40,10 @@ enum {
     do {                \
         *src2 = R(rs2); \
     } while (0)
+
+/** 
+ * 辅助宏, 用于从指令中抽取出立即数
+ */
 #define immI()                            \
     do {                                  \
         *imm = SEXT(BITS(i, 31, 20), 12); \

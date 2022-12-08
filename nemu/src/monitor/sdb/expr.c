@@ -121,7 +121,8 @@ static bool make_token(char *e)
                  */
                 /**
                  * TODO：现在一个新的 token 被 rules[i] 识别。 
-                 * 添加代码以将tookens记录在数组“tookens”中。 对于某些类型的tookens，应该执行一些额外的操作。对于非运算符的token，还需要记录下它的内容
+                 * 添加代码以将tookens记录在数组“tookens”中。 对于某些类型的tookens，应该执行一些额外的操作。
+                 * 对于十六进制的token，还需要原样保存，因为它们还需要经过一次转换才能进行运算
                  */
 
                 switch (rules[i].token_type) {
@@ -148,12 +149,64 @@ static bool make_token(char *e)
     return true;
 }
 
+/**
+ * 用于判断表达式是否被一对匹配的括号包围着, 同时检查表达式的左右括号是否匹配, 
+ * 如果不匹配, 这个表达式肯定是不符合语法的, 也就不需要继续进行求值了
+ */
+// static word_t check_parentheses(int p, int q)
+// {
+//     return 0;
+// }
+
+static word_t eval(int p, int q, bool *success)
+{
+    // if (p > q) {
+    //     /* Bad expression */
+    // } else if (p == q) {
+    //     /**
+    //      * 单个token，只有一个字符
+    //      * 目前来说应该就是个数字，直接返回数字的值即可
+    //      */
+    //     // single token
+    //     word_t val;
+    //     switch (tokens[p].type) {
+    //     case TK_NUM:
+    //         val = strtoul(tokens[s].str, NULL, 0);
+    //         break;
+    //     default:
+    //         assert(0);
+    //     }
+    // } else if (check_parentheses(p, q) == true) {
+    //     /**
+    //      * The expression is surrounded by a matched pair of parentheses.
+    //      * If that is the case, just throw away the parentheses.
+    //      */
+    //     return eval(p + 1, q - 1);
+    // } else {
+    //     op   = the position of 主运算符 in the token expression;
+    //     val1 = eval(p, op - 1);
+    //     val2 = eval(op + 1, q);
+
+    //     switch (op_type) {
+    //     case '+':
+    //         return val1 + val2;
+    //     case '-': /* ... */
+    //     case '*': /* ... */
+    //     case '/': /* ... */
+    //     default:
+    //         assert(0);
+    //     }
+    // }
+    return 0;
+}
+
 word_t expr(char *e, bool *success)
 {
     if (!make_token(e)) {
         *success = false;
         return 0;
     }
+    eval(1,2,success);
     *success = true;
 
     /* TODO: Insert codes to evaluate the expression. */

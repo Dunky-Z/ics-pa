@@ -26,7 +26,7 @@
 #define MAX_INST_TO_PRINT 10
 
 CPU_state       cpu             = {};
-uint64_t        g_nr_guest_inst = 0;
+uint64_t        g_nr_guest_inst = 0; // 记录用户指令的个数
 static uint64_t g_timer         = 0; // unit: us
 static bool     g_print_step    = false;
 
@@ -85,6 +85,7 @@ static void execute(uint64_t n)
         exec_once(&s, cpu.pc);
         g_nr_guest_inst++;
         trace_and_difftest(&s, cpu.pc);
+        /* 检查NEMU的状态是否为NEMU_RUNNING, 若是, 则继续执行下一条指令, 否则则退出执行指令的循环 */
         if (nemu_state.state != NEMU_RUNNING)
             break;
         IFDEF(CONFIG_DEVICE, device_update());
